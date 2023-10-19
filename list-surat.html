@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="style.css">
+ <link rel="shortcut icon" href="images/edulim.png" type="image/x-icon">
+ <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+ <title>Edulim</title>
+</head>
+<body>
+
+    <header class="header">
+
+        <img src="images/edulim.png" class="logo" alt="logo cuyy" >
+        
+        <i class='bx bx-menu-alt-left' id="menu-icon" style='color:rgba(0,0,0,0.64)' ></i>
+        <nav class="navbar">
+            <!-- <a href="home.html">Home</a> -->
+            <a href="index.html">Jadwal Sholat</a>
+            <a href="asmaul-husna.html">Asmaul Husna</a>
+            <a href="list-surat.html">Al Quran</a>
+        </nav>
+        <div class="tombol">
+            <button class="button">User</button>
+        </div>
+    </header>
+
+
+    <section class="awal">
+        <img class="gambar" src="images/header_alquran.png" alt="poto" >
+    </section>
+    <hr>
+
+    <!-- <div id="kotak">
+        <div id="kecil">
+            <button id="nomer">122</button>
+            <h3 id="nama">annas</h3>
+            <img id="save" src="images/Rectangle 62.png" alt="potp">
+        </div>
+        <div id="sukses">
+            <h2 id="arab">البقرة</h2>
+            <p id="ayat">Jumlah Ayat : 286</p>
+            <p id="arti">Arti : Sapi betina</p>
+            <hr>
+        </div> -->
+
+    <div id="result">
+
+    </div>
+
+
+
+
+
+
+    <script>
+        window.onload = function () {
+            getData();
+        }
+
+        function getData() {
+            fetch('https://api.banghasan.com/quran/format/json/surat')
+            .then(function (response) {
+                if (!response.ok){
+                    throw new Error('Gagal mengambil Data');
+                }
+                return response.json();
+            })
+
+            .then(function (data) {
+                displayData(data);
+            })
+            .catch(function (error) {
+                console.log("terjadi kesalahan", error);
+            })
+        }
+
+        function displayData(data) {
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = '' ;
+
+            data.hasil.forEach(function (surat) {
+                var suratDiv = document.createElement("div")
+                suratDiv.classList.add("kotak");
+
+                var abuDiv = document.createElement("div")
+                abuDiv.classList.add("kecil");
+
+                var nomorSurat = document.createElement("button")
+                nomorSurat.innerHTML = surat.nomor;
+                nomorSurat.classList.add("nomer");
+
+                var namaSurat = document.createElement("h3")
+                namaSurat.innerHTML =  surat.name;
+                namaSurat.classList.add("nama");
+
+                var gambar = document.createElement("save")
+                gambar.classList.add("save");
+
+                var putihDiv = document.createElement("div")
+                putihDiv.classList.add("sukses");
+
+                var asmaSurat = document.createElement("h2")
+                asmaSurat.innerHTML = surat.asma;
+                asmaSurat.classList.add("arab");
+
+                var ayatSurat = document.createElement("p")
+                ayatSurat.innerHTML = "Ayat surat: " + surat.ayat;
+                ayatSurat.classList.add("ayat");
+
+                var artiSurat = document.createElement("p")
+                artiSurat.innerHTML = "Arti surat: " + surat.arti;
+                artiSurat.classList.add("arti");
+
+                let value = document.createElement("p");
+                value.classList.add("line");
+
+
+
+
+                suratDiv.appendChild(abuDiv);
+                abuDiv.appendChild(nomorSurat);
+                abuDiv.appendChild(namaSurat);
+                abuDiv.appendChild(gambar);
+                suratDiv.appendChild(putihDiv);
+                putihDiv.appendChild(asmaSurat);
+                putihDiv.appendChild(artiSurat);
+                putihDiv.appendChild(ayatSurat);
+                suratDiv.appendChild(value);
+
+
+                resultDiv.appendChild(suratDiv);
+            })
+        }
+        let menuIcon = document.querySelector('#menu-icon')
+        let navbar = document.querySelector('.navbar')
+
+        menuIcon.onclick = () => {
+            menuIcon.classList.toggle('bx-x')
+            navbar.classList.toggle('active')
+        }
+
+        window.onscroll = () => {
+            menuIcon.classList.remove('bx-x')
+            navbar.classList.remove('active')
+    }
+    </script>
+
+</body>
+</html>

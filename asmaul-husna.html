@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="style.css">
+ <link rel="shortcut icon" href="images/edulim.png" type="image/x-icon">
+
+ <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+ <title>Edulim</title>
+</head>
+<body>
+    <header class="header">
+        <img src="images/edulim.png" class="logo" alt="logo cuyy" >
+        <i class='bx bx-menu-alt-left' id="menu-icon" style='color:rgba(0,0,0,0.64)' ></i>
+
+        <nav class="navbar">
+            <!-- <a href="home.html">Home</a> -->
+            <a href="index.html">Jadwal Sholat</a>
+            <a href="asmaul-husna.html">Asmaul Husna</a>
+            <a href="list-surat.html">Al Quran</a>
+        </nav>
+        <div class="tombol">
+            <button class="button">User</button>
+        </div>
+    </header>
+    <section class="awal">
+        <img class="gambar" src="images/header_alquran.png" alt="poto" >
+    </section>
+
+    <div id="result"></div>
+    
+
+
+        <script>
+            window.onload = function () {
+                getDataAsma();
+            }
+    
+            function getDataAsma() {
+                fetch('https://api.aladhan.com/v1/asmaAlHusna')
+                .then(function (response) {
+                    if (!response.ok){
+                        throw new Error('Gagal mengambil Data');
+                    }
+                    return response.json();
+                })
+    
+                .then(function (asma) {
+                    displayDataAsma(asma);
+                })
+                .catch(function (error) {
+                    console.log("terjadi kesalahan", error);
+                })
+            }
+    
+            function displayDataAsma(asma) {
+                var resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = '' ;
+    
+                asma.data.forEach(function (surat) {
+                var suratDiv = document.createElement("div")
+                suratDiv.classList.add("kotak");
+
+                var abuDiv = document.createElement("div")
+                abuDiv.classList.add("kecil");
+
+                var nomerAsma = document.createElement("button")
+                nomerAsma.innerHTML = surat.number;
+                nomerAsma.classList.add("nomer");
+
+                var namaAsma = document.createElement("h3")
+                namaAsma.innerHTML =  surat.transliteration;
+                namaAsma.classList.add("nama");
+
+                var gambar = document.createElement("save")
+                gambar.classList.add("save");
+
+                var putihDiv = document.createElement("div")
+                putihDiv.classList.add("sukses");
+
+                var arabAsma = document.createElement("h2")
+                arabAsma.innerHTML = surat.name;
+                arabAsma.classList.add("arab");
+
+                var artiAsma = document.createElement("p")
+                artiAsma.innerHTML = "The Meaning: " + surat.meaning;
+                artiAsma.classList.add("arti");
+
+                let value = document.createElement("p");
+                value.classList.add("line");
+
+                suratDiv.appendChild(abuDiv);
+                abuDiv.appendChild(nomerAsma);
+                abuDiv.appendChild(namaAsma);
+                abuDiv.appendChild(gambar);
+                suratDiv.appendChild(putihDiv);
+                putihDiv.appendChild(arabAsma);
+                putihDiv.appendChild(artiAsma);
+                putihDiv.appendChild(value);
+
+
+                resultDiv.appendChild(suratDiv);
+
+                })
+            }
+            let menuIcon = document.querySelector('#menu-icon')
+        let navbar = document.querySelector('.navbar')
+
+        menuIcon.onclick = () => {
+            menuIcon.classList.toggle('bx-x')
+            navbar.classList.toggle('active')
+        }
+
+        window.onscroll = () => {
+            menuIcon.classList.remove('bx-x')
+            navbar.classList.remove('active')
+    }
+        </script>
+
+ 
+</body>
+</html>

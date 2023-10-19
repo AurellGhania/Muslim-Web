@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edulim</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="images/edulim.png" type="image/x-icon">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  </head>
+  <body>
+    <header class="header">
+        <img src="images/edulim.png" class="logo" alt="logo cuyy" >
+        <i class='bx bx-menu-alt-left' id="menu-icon" style='color:rgba(0,0,0,0.64)' ></i>
+
+        <nav class="navbar">
+            <!-- <a href="home.html">Home</a> -->
+            <a href="index.html">Jadwal Sholat</a>
+            <a href="asmaul-husna.html">Asmaul Husna</a>
+            <a href="list-surat.html">Al Quran</a>
+        </nav>
+        <div class="tombol">
+            <button class="button">User</button>
+        </div>
+    </header>
+    <section class="awal">
+        <img class="gambar" src="images/header_alquran.png" alt="poto" >
+    </section>
+
+
+    <section class="jadwal-sholat">
+      <div class="container">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title-an">Jadwal Sholat</h5>
+            <div class="sama-aja">
+              <p>Kota/Lokasi : <strong id="city"></strong></p>
+              <p>Provinsi/Daerah : <strong id="prov"></strong></p>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="table-primary">
+                  <tr>
+                    <th class="th1">Tanggal</th>
+                    <th>Imsak</th>
+                    <th>Subuh</th>
+                    <th>Terbit</th>
+                    <th>Dzuhur</th>
+                    <th>Ashar</th>
+                    <th>Maghrib</th>
+                    <th>Isya</th>
+                  </tr>
+                </thead>
+                <tbody id="list-jadwal"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const city = 1222;
+      const date = new Date();
+      const dd = String(date.getDate()).padStart(2, "0");
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      console.log(yyyy);
+      const now = yyyy + "-" + mm + "-" + dd;
+
+      const jadwalApi = `https://api.myquran.com/v1/sholat/jadwal/${city}/${yyyy}/${mm}`;
+
+      fetch(jadwalApi)
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Ada yang salah bung");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const jadwal = data.data;
+          const list = jadwal.jadwal;
+          const listJadwal = document.getElementById("list-jadwal");
+          const kota = document.getElementById("city");
+          const prov = document.getElementById("prov");
+
+          kota.innerHTML = jadwal.lokasi;
+          prov.innerHTML = jadwal.daerah;
+
+          list.forEach((el) => {
+            const tr = document.createElement("tr");
+            if(el.date === now) {
+              tr.classList.add("table-primary")
+            }
+            // tanggal
+            const dd = document.createElement("td");
+            dd.innerText = el.tanggal;
+            dd.classList.add("date");
+
+
+
+            // imsak
+            const imsak = document.createElement("td");
+            imsak.innerText = el.imsak;
+
+            // subuh
+            const subuh= document.createElement("td");
+            subuh.innerText = el.subuh;
+
+            // terbit
+            const terbit = document.createElement("td");
+            terbit.innerText = el.terbit;
+
+            // dzuhur
+            const dzuhur = document.createElement("td");
+            dzuhur.innerText = el.dzuhur;
+
+            // dzuhur
+            const ashar = document.createElement("td");
+            ashar.innerText = el.ashar;
+
+            // Ashar
+            const maghrib = document.createElement("td");
+            maghrib.innerText = el.maghrib;
+
+            // Maghrib
+            const isya = document.createElement("td");
+            isya.innerText = el.isya;
+
+            listJadwal.appendChild(tr);
+            tr.appendChild(dd);
+            tr.appendChild(imsak);
+            tr.appendChild(subuh);
+            tr.appendChild(terbit);
+            tr.appendChild(dzuhur);
+            tr.appendChild(ashar);
+            tr.appendChild(maghrib);
+            tr.appendChild(isya);
+          });
+        });
+        let menuIcon = document.querySelector('#menu-icon')
+        let navbar = document.querySelector('.navbar')
+
+        menuIcon.onclick = () => {
+            menuIcon.classList.toggle('bx-x')
+            navbar.classList.toggle('active')
+        }
+
+        window.onscroll = () => {
+            menuIcon.classList.remove('bx-x')
+            navbar.classList.remove('active')
+    }
+    </script>
+  </body>
+</html>
